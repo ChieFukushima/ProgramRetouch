@@ -12,15 +12,18 @@ import base.DBManager;
 import beans.BuyDataBeans;
 
 public class BuyDAO {
-	//インスタンスオブジェクトを返却させてコードの簡略化
+	// インスタンスオブジェクトを返却させてコードの簡略化
 	public static BuyDAO getInstance() {
 		return new BuyDAO();
 	}
 
 	/**
 	 * 購入情報登録処理
-	 * @param bdb 購入情報
-	 * @throws SQLException 呼び出し元にスローさせるため
+	 *
+	 * @param bdb
+	 *            購入情報
+	 * @throws SQLException
+	 *             呼び出し元にスローさせるため
 	 */
 	public static int insertBuy(BuyDataBeans bdb) throws SQLException {
 		Connection con = null;
@@ -56,11 +59,11 @@ public class BuyDAO {
 
 	/**
 	 * 購入IDによる購入情報検索
+	 *
 	 * @param buyId
-	 * @return BuyDataBeans
-	 * 				購入情報のデータを持つJavaBeansのリスト
+	 * @return BuyDataBeans 購入情報のデータを持つJavaBeansのリスト
 	 * @throws SQLException
-	 * 				呼び出し元にスローさせるため
+	 *             呼び出し元にスローさせるため
 	 */
 	public static BuyDataBeans getBuyDataBeansByBuyId(int buyId) throws SQLException {
 		Connection con = null;
@@ -68,11 +71,8 @@ public class BuyDAO {
 		try {
 			con = DBManager.getConnection();
 
-			st = con.prepareStatement(
-					"SELECT * FROM t_buy"
-							+ " JOIN m_delivery_method"
-							+ " ON t_buy.delivery_method_id = m_delivery_method.id"
-							+ " WHERE t_buy.id = ?");
+			st = con.prepareStatement("SELECT * FROM t_buy" + " JOIN m_delivery_method"
+					+ " ON t_buy.delivery_method_id = m_delivery_method.id" + " WHERE t_buy.id = ?");
 			st.setInt(1, buyId);
 
 			ResultSet rs = st.executeQuery();
@@ -101,30 +101,30 @@ public class BuyDAO {
 		}
 	}
 
-//	購入履歴をDBから探す
-	public static ArrayList<BuyDataBeans> findAll(int userId){
+//ユーザーIDから購入履歴を探す
+	public static ArrayList<BuyDataBeans> findAll(int userId) {
 
 		Connection conn = null;
 
-		ArrayList<BuyDataBeans> buyList =new ArrayList<BuyDataBeans>();
+		ArrayList<BuyDataBeans> buyList = new ArrayList<BuyDataBeans>();
 
 		try {
 
-			conn =DBManager.getConnection();
+			conn = DBManager.getConnection();
 
-			String sql = "SELECT * FROM t_buy" + "JOIN m_delivery_method" + "ON t_buy.delivery_method_id = m_delivery_method.id" + "WHERE user_id =" + userId;
+			String sql = "SELECT * FROM t_buy " + " JOIN m_delivery_method " + " ON t_buy.delivery_method_id = m_delivery_method.id " + " WHERE user_id = " + userId;
 
-			PreparedStatement pStmt =conn.prepareStatement(sql);
+			PreparedStatement pStmt = conn.prepareStatement(sql);
 
 			ResultSet rs = pStmt.executeQuery();
 
-			while(rs.next()) {
+			while (rs.next()) {
 
 				BuyDataBeans bdb = new BuyDataBeans();
 
 				bdb.setId(rs.getInt("id"));
 				bdb.setUserId(userId);
-				bdb.setTotalPrice(rs.getInt("toral_price"));
+				bdb.setTotalPrice(rs.getInt("total_price"));
 				bdb.setDelivertMethodId(rs.getInt("delivery_method_id"));
 				bdb.setBuyDate(rs.getTimestamp("create_date"));
 				bdb.setDeliveryMethodPrice(rs.getInt("price"));
@@ -134,24 +134,23 @@ public class BuyDAO {
 
 			}
 
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 
 			e.printStackTrace();
 
 			return null;
 
-		}finally {
+		} finally {
 
-			if(conn != null) {
-
+			if (conn != null) {
 
 				try {
 
 					conn.close();
 
-				}catch(SQLException e) {
+				} catch (SQLException e) {
 
-					System.out.println(e);
+					e.printStackTrace();
 
 					return null;
 
@@ -164,5 +163,6 @@ public class BuyDAO {
 		return buyList;
 
 	}
+
 
 }

@@ -24,11 +24,10 @@ public class BuyDetailDAO {
 	 */
 	public static void insertBuyDetail(BuyDetailDataBeans bddb) throws SQLException {
 		Connection con = null;
-		PreparedStatement st = null;
 		try {
 			con = DBManager.getConnection();
-			st = con.prepareStatement(
-					"INSERT INTO t_buy_detail(buy_id,item_id) VALUES(?,?)");
+			String sql = "INSERT INTO t_buy_detail(buy_id,item_id) VALUES(?,?)";
+			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, bddb.getBuyId());
 			st.setInt(2, bddb.getItemId());
 			st.executeUpdate();
@@ -50,7 +49,7 @@ public class BuyDetailDAO {
 	 * @return {BuyDataDetailBeans}
 	 * @throws SQLException
 	 */
-	public ArrayList<BuyDetailDataBeans> getBuyDataBeansListByBuyId(int buyId) throws SQLException {
+	public static ArrayList<BuyDetailDataBeans> getBuyDataBeansListByBuyId(int buyId) throws SQLException {
 		Connection con = null;
 		PreparedStatement st = null;
 		try {

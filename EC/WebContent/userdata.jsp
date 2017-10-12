@@ -77,12 +77,12 @@
 								<%
 								ArrayList<BuyDataBeans> buyList = new ArrayList<BuyDataBeans>();
 								buyList = BuyDAO.findAll(udb.getId());
-								for(int i = 0; i < buyList.size(); i++){
+								for(int i = 0;i < buyList.size();i++){
 									String buyDetail = "UserBuyHistoryDetail?buy_id=" + buyList.get(i).getId();
 								%>
 
 								<tr>
-									<td class="center"><a href=<%= buyDetail %> class="btn-floating btn waves-effect waves-light "> <i class="material-icons">details</i></a></td>
+									<td class="center"><a href=<%=buyDetail%> class="btn-floating btn waves-effect waves-light "> <i class="material-icons">details</i></a></td>
 									<td class="center"><%= buyList.get(i).getFormatDate() %></td>
 									<td class="center"><%= buyList.get(i).getDeliveryMethodName() %></td>
 									<td class="center"><%= buyList.get(i).getTotalPrice() %>円</td>
