@@ -15,14 +15,15 @@ import beans.BuyDetailDataBeans;
 import dao.BuyDAO;
 import dao.BuyDetailDAO;
 
-
 /**
  * 購入履歴画面
  * @author d-yamaguchi
  *
  */
 @WebServlet("/UserBuyHistoryDetail")
+
 public class UserBuyHistoryDetail extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,9 +39,11 @@ public class UserBuyHistoryDetail extends HttpServlet {
 		} catch (SQLException e) {
 
 			e.printStackTrace();
+
 		}
 
 		request.setAttribute("bdb", bdb);
+
 
 		ArrayList<BuyDetailDataBeans> buyDetailList = new ArrayList<BuyDetailDataBeans>();
 
@@ -53,6 +56,8 @@ public class UserBuyHistoryDetail extends HttpServlet {
 			e.printStackTrace();
 
 		}
+
+		request.setAttribute("buyDetailList", buyDetailList);
 
 		request.getRequestDispatcher(EcHelper.USER_BUY_HISTORY_DETAIL_PAGE).forward(request, response);
 
