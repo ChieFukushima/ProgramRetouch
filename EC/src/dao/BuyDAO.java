@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import base.DBManager;
 import beans.BuyDataBeans;
@@ -98,6 +99,70 @@ public class BuyDAO {
 				con.close();
 			}
 		}
+	}
+
+//	購入履歴をDBから探す
+	public static ArrayList<BuyDataBeans> findAll(int userId){
+
+		Connection conn = null;
+
+		ArrayList<BuyDataBeans> buyList =new ArrayList<BuyDataBeans>();
+
+		try {
+
+			conn =DBManager.getConnection();
+
+			String sql = "SELECT * FROM t_buy" + "JOIN m_delivery_method" + "ON t_buy.delivery_method_id = m_delivery_method.id" + "WHERE user_id =" + userId;
+
+			PreparedStatement pStmt =conn.prepareStatement(sql);
+
+			ResultSet rs = pStmt.executeQuery();
+
+			while(rs.next()) {
+
+				BuyDataBeans bdb = new BuyDataBeans();
+
+				bdb.setId(rs.getInt("id"));
+				bdb.setUserId(userId);
+				bdb.setTotalPrice(rs.getInt("toral_price"));
+				bdb.setDelivertMethodId(rs.getInt("delivery_method_id"));
+				bdb.setBuyDate(rs.getTimestamp("create_date"));
+				bdb.setDeliveryMethodPrice(rs.getInt("price"));
+				bdb.setDeliveryMethodName(rs.getString("name"));
+
+				buyList.add(bdb);
+
+			}
+
+		}catch (SQLException e) {
+
+			e.printStackTrace();
+
+			return null;
+
+		}finally {
+
+			if(conn != null) {
+
+
+				try {
+
+					conn.close();
+
+				}catch(SQLException e) {
+
+					System.out.println(e);
+
+					return null;
+
+				}
+
+			}
+
+		}
+
+		return buyList;
+
 	}
 
 }
