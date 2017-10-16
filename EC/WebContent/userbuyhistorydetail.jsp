@@ -65,12 +65,12 @@
 
 								<%
 								ArrayList<BuyDetailDataBeans> buyDetailList = (ArrayList<BuyDetailDataBeans>)request.getAttribute("buyDetailList");
-								for(int i = 0;i < buyDetailList.size();i++){
-								ItemDataBeans idb = ItemDAO.getItemByItemID(buyDetailList.get(i).getItemId());
+								for(int i = 0; i < buyDetailList.size(); i++){
+								ItemDataBeans itemDB = ItemDAO.getItemByItemID(buyDetailList.get(i).getItemId());
 								%>
 								<tr>
-									<td class="center"><%=idb.getName()%></td>
-									<td class="center"><%=idb.getPrice()%>円</td>
+									<td class="center"><%=itemDB.getName()%></td>
+									<td class="center"><%=itemDB.getPrice()%>円</td>
 								</tr>
 								<%
 								}

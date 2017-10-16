@@ -30,24 +30,38 @@ public class UserDAO {
 	 *             呼び出し元にcatchさせるためにスロー
 	 */
 	public void insertUser(UserDataBeans udb) throws SQLException {
+
 		Connection con = null;
 		PreparedStatement st = null;
+
 		try {
+
 			con = DBManager.getConnection();
+
 			st = con.prepareStatement("INSERT INTO t_user(name,login_id,address,login_password,create_date) VALUES(?,?,?,?,?)");
+
 			st.setString(1, udb.getName());
 			st.setString(2, udb.getLoginId());
 			st.setString(3, udb.getAddress());
 			st.setString(4, EcHelper.getSha256(udb.getPassword()));
 			st.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+
 			st.executeUpdate();
+
 			System.out.println("inserting user has been completed");
+
 		} catch (SQLException e) {
+
 			System.out.println(e.getMessage());
+
 			throw new SQLException(e);
+
 		} finally {
+
 			if (con != null) {
+
 				con.close();
+
 			}
 		}
 	}
@@ -64,9 +78,13 @@ public class UserDAO {
 	 *             呼び出し元にスロー
 	 */
 	public static int getUserId(String loginId, String password) throws SQLException {
+
 		Connection con = null;
+
 		PreparedStatement st = null;
+
 		try {
+
 			con = DBManager.getConnection();
 
 			st = con.prepareStatement("SELECT * FROM t_user WHERE login_id = ?");
@@ -75,22 +93,36 @@ public class UserDAO {
 			ResultSet rs = st.executeQuery();
 
 			int userId = 0;
+
 			while (rs.next()) {
+
 				if (EcHelper.getSha256(password).equals(rs.getString("login_password"))) {
+
 					userId = rs.getInt("id");
+
 					System.out.println("login succeeded");
+
 					break;
 				}
+
 			}
 
 			System.out.println("searching userId by loginId has been completed");
+
 			return userId;
+
 		} catch (SQLException e) {
+
 			System.out.println(e.getMessage());
+
 			throw new SQLException(e);
+
 		} finally {
+
 			if (con != null) {
+
 				con.close();
+
 			}
 		}
 	}
@@ -105,33 +137,49 @@ public class UserDAO {
 	 *             呼び出し元にcatchさせるためスロー
 	 */
 	public static UserDataBeans getUserDataBeansByUserId(int userId) throws SQLException {
+
 		UserDataBeans udb = new UserDataBeans();
+
 		Connection con = null;
+
 		PreparedStatement st = null;
+
 		try {
+
 			con = DBManager.getConnection();
+
 			st = con.prepareStatement("SELECT id,name, login_id, address FROM t_user WHERE id =" + userId);
+
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
+
 				udb.setId(rs.getInt("id"));
 				udb.setName(rs.getString("name"));
 				udb.setLoginId(rs.getString("login_id"));
 				udb.setAddress(rs.getString("address"));
+
 			}
 
 			st.close();
 
 		} catch (SQLException e) {
+
 			System.out.println(e.getMessage());
+
 			throw new SQLException(e);
+
 		} finally {
+
 			if (con != null) {
+
 				con.close();
+
 			}
 		}
 
 		System.out.println("searching UserDataBeans by userId has been completed");
+
 		return udb;
 	}
 
@@ -152,12 +200,16 @@ public class UserDAO {
 		try {
 
 			con = DBManager.getConnection();
+
 			st = con.prepareStatement("UPDATE t_user SET name=?, login_id=?, address=? WHERE id=?;");
+
 			st.setString(1, udb.getName());
 			st.setString(2, udb.getLoginId());
 			st.setString(3, udb.getAddress());
 			st.setInt(4, udb.getId());
+
 			st.executeUpdate();
+
 			System.out.println("update has been completed");
 
 			st = con.prepareStatement("SELECT name, login_id, address FROM t_user WHERE id=" + udb.getId());
@@ -168,17 +220,22 @@ public class UserDAO {
 				updatedUdb.setName(rs.getString("name"));
 				updatedUdb.setLoginId(rs.getString("login_id"));
 				updatedUdb.setAddress(rs.getString("address"));
+
 			}
 
 			st.close();
 			System.out.println("searching updated-UserDataBeans has been completed");
 
 		} catch (SQLException e) {
+
 			System.out.println(e.getMessage());
 			throw new SQLException(e);
+
 		} finally {
+
 			if (con != null) {
 				con.close();
+
 			}
 		}
 	}
@@ -200,24 +257,34 @@ public class UserDAO {
 		PreparedStatement st = null;
 
 		try {
+
 			con = DBManager.getConnection();
 			// 入力されたlogin_idが存在するか調べる
 			st = con.prepareStatement("SELECT login_id FROM t_user WHERE login_id = ? AND id != ?");
+
 			st.setString(1, loginId);
 			st.setInt(2, userId);
+
 			ResultSet rs = st.executeQuery();
 
 			System.out.println("searching loginId by inputLoginId has been completed");
 
 			if (rs.next()) {
+
 				isOverlap = true;
+
 			}
+
 		} catch (SQLException e) {
+
 			System.out.println(e.getMessage());
 			throw new SQLException(e);
+
 		} finally {
+
 			if (con != null) {
 				con.close();
+
 			}
 		}
 
